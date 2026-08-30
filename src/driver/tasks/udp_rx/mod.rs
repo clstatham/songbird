@@ -268,9 +268,11 @@ impl UdpRx {
                 // to *speech* rather than just presence.
                 entry.refresh_timer(self.config.decode_state_timeout.into());
 
+                let payload_len = rtp.payload().len();
                 let store_pkt = StoredPacket {
                     packet: packet.freeze(),
                     decrypted,
+                    payload_end_pad: payload_len - rtp_body_tail,
                 };
                 let packet = store_pkt.packet.clone();
                 entry.store_packet(store_pkt, &self.config);

@@ -8,6 +8,10 @@ pub struct StoredPacket {
     pub packet: Bytes,
     // We need to store this as it's possible that a user can change config modes.
     pub decrypted: bool,
+    // The end-pad to use when slicing the payload for Opus decode. Stored here
+    // because DAVE decryption adjusts the tail beyond what crypto_mode.payload_suffix_len()
+    // knows about (DAVE overhead = 8-byte auth tag + 1-byte supplemental size + 2-byte marker).
+    pub payload_end_pad: usize,
 }
 
 /// Determines whether an SSRC's packets should be decoded.
